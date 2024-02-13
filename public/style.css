@@ -4,6 +4,7 @@
 @import url(css/loader.css);
 @import url(css/character-group-overlay.css);
 @import url(css/file-form.css);
+@import url(css/logprobs.css);
 
 :root {
     --doc-height: 100%;
@@ -135,7 +136,7 @@ body {
 }
 
 .scrollY {
-    overflow-y: auto;
+    overflow-y: auto !important;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -316,6 +317,11 @@ table.responsiveTable {
     padding: 1em;
 }
 
+.mes_text img:not(.mes_img) {
+    max-width: 100%;
+    max-height: var(--doc-height);
+}
+
 .mes .mes_timer,
 .mes .mesIDDisplay,
 .mes .tokenCounterDisplay {
@@ -414,13 +420,13 @@ hr {
 }
 
 #bg1 {
-    background-image: url('backgrounds/tavern day.jpg');
-    z-index: -2;
+    background-image: url('backgrounds/__transparent.png');
+    z-index: -3;
 }
 
 #bg_custom {
     background-image: none;
-    z-index: -1;
+    z-index: -2;
 }
 
 /*TOPPER margin*/
@@ -533,7 +539,6 @@ hr {
     background-color: var(--SmartThemeChatTintColor);
     -webkit-backdrop-filter: blur(var(--SmartThemeBlurStrength));
     text-shadow: 0px 0px calc(var(--shadowWidth) * 1px) var(--SmartThemeShadowColor);
-    scrollbar-width: thin;
     flex-direction: column;
     z-index: 30;
 }
@@ -548,7 +553,7 @@ hr {
 /* special case for desktop Safari to allow #sheld resizing */
 @media only screen and (min-width: 1024px) and (-webkit-min-device-pixel-ratio: 2) and (pointer: fine) {
     #form_sheld {
-        margin-bottom: 5px;
+        margin-bottom: 4px;
     }
 }
 
@@ -631,6 +636,10 @@ hr {
     display: none;
     order: 2;
     padding-right: 2px;
+    place-self: center;
+    cursor: pointer;
+    transition: 0.3s;
+    opacity: 0.7;
 }
 
 #options_button {
@@ -688,6 +697,7 @@ hr {
     display: flex;
     align-items: center;
     justify-content: center;
+    pointer-events: none;
 }
 
 .options-content hr {
@@ -969,7 +979,6 @@ textarea {
     font-size: var(--mainFontSize);
     font-family: "Noto Sans", "Noto Color Emoji", sans-serif;
     padding: 5px 10px;
-    scrollbar-width: thin;
     max-height: 90vh;
     max-height: 90svh;
 }
@@ -1144,7 +1153,6 @@ input[type="file"] {
     display: block;
     cursor: pointer;
     text-align: center;
-    padding-right: 20px;
     margin-top: 0;
     filter: grayscale(1) brightness(75%);
     -webkit-transition: all 0.5s ease-in-out;
@@ -1252,10 +1260,6 @@ input[type="file"] {
     align-self: center;
 }
 
-#rm_print_characters_block.bulk_select .wide100pLess70px {
-    width: calc(100% - 85px);
-}
-
 #rm_print_characters_block .empty_block {
     display: flex;
     flex-direction: column;
@@ -1337,7 +1341,7 @@ input[type="file"] {
     line-height: 1.2;
 }
 
-#ANClose {
+.floating_panel_close {
     height: 15px;
     aspect-ratio: 1 / 1;
     font-size: 20px;
@@ -1345,7 +1349,7 @@ input[type="file"] {
     transition: all 250ms;
 }
 
-#ANClose:hover {
+.floating_panel_close:hover {
     cursor: pointer;
     opacity: 1;
 }
@@ -1448,9 +1452,7 @@ select option:not(:checked) {
     display: block;
 }
 
-#api_button:hover,
-#api_button_novel:hover,
-#api_button_textgenerationwebui:hover {
+.menu_button.api_button:hover {
     background-color: var(--active);
 }
 
@@ -1519,6 +1521,14 @@ select option:not(:checked) {
     height: auto;
 }
 
+#persona_search_bar {
+    min-width: 80px;
+}
+
+#persona_sort_order {
+    max-width: 4em;
+}
+
 input[type=search]::-webkit-search-cancel-button {
     -webkit-appearance: none;
     height: 1em;
@@ -1545,6 +1555,7 @@ input[type=search]:focus::-webkit-search-cancel-button {
     padding: 5px;
     border-radius: 10px;
     cursor: pointer;
+    margin-bottom: 1px;
 }
 
 /*applies to char list and mes_text char display name*/
@@ -1583,17 +1594,18 @@ input[type=search]:focus::-webkit-search-cancel-button {
 }
 
 /*applies to both groups and solos chars in the char list*/
-#rm_print_characters_block .ch_name {
+#rm_print_characters_block .ch_name,
+.avatar-container .ch_name {
     flex: 1;
     white-space: nowrap;
-    /* max-width: calc(100% - 29px); */
     overflow: hidden;
     text-overflow: ellipsis;
     display: block;
 }
 
 .bogus_folder_select:hover,
-.character_select:hover {
+.character_select:hover,
+.avatar-container:hover {
     background-color: var(--white30a);
 }
 
@@ -1818,29 +1830,35 @@ input[type=search]:focus::-webkit-search-cancel-button {
     position: relative;
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: flex-start;
+    gap: 5px;
+    padding: 5px;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-bottom: 1px;
+    width: 100%;
+    outline: 2px solid transparent;
+    border: 2px solid transparent;
+}
+
+.avatar-container .character_select_container {
+    flex-grow: 1;
 }
 
 grammarly-extension {
     z-index: 35;
 }
 
-.avatar-container:hover .avatar-buttons {
+.avatar-container .avatar-buttons {
     display: flex;
+    flex-direction: row;
+    gap: 5px;
+    opacity: 0.3;
+    transition: opacity 0.25s ease-in-out;
 }
 
-.avatar-buttons .menu_button {
-    pointer-events: all;
-}
-
-.avatar-buttons-bottom {
-    bottom: 0;
-    left: 0;
-}
-
-.avatar-buttons-top {
-    top: 0;
-    left: 0;
+.avatar-container .avatar-buttons:hover {
+    opacity: 1;
 }
 
 /* Ross should be able to handle this later */
@@ -1848,14 +1866,6 @@ grammarly-extension {
     justify-content: center;
     width: fit-content;
 }*/
-
-.avatar-buttons {
-    pointer-events: none;
-    display: none;
-    position: absolute;
-    width: 100%;
-    justify-content: space-between;
-}
 
 .avatar_div .avatar {
     /*     margin-left: 4px;
@@ -1965,6 +1975,7 @@ grammarly-extension {
 .wide_dialogue_popup {
     aspect-ratio: 1 / 1;
     width: unset !important;
+    min-width: var(--sheldWidth);
 }
 
 #bulk_tag_popup_holder,
@@ -2275,35 +2286,28 @@ input[type="checkbox"]:not(#nav-toggle):not(#rm_button_panel_pin):not(#lm_button
 
 #user_avatar_block {
     display: flex;
-    grid-gap: 10px;
     flex-wrap: wrap;
-    justify-content: space-evenly;
+    justify-content: space-around;
 }
 
-#user_avatar_block .avatar {
+.avatar-container .avatar {
     cursor: pointer;
-    width: 64px;
-    height: 64px;
-    outline: 2px solid rgba(255, 255, 255, 0.7);
     border-radius: 50%;
-}
-
-#user_avatar_block .avatar:not(.selected) {
+    align-self: center;
     outline: 2px solid transparent;
+    flex: unset;
 }
 
-#user_avatar_block .default_persona .avatar {
-    border: 2px solid var(--golden);
-    box-sizing: content-box;
+.avatar-container.selected {
+    border: 2px solid rgba(255, 255, 255, 0.7);
 }
 
-#user_avatar_block .default_persona .set_default_persona {
+.avatar-container.default_persona .avatar {
+    outline: 2px solid var(--golden);
+}
+
+.avatar-container.default_persona .set_default_persona {
     color: var(--golden);
-}
-
-#user_avatar_block .avatar img {
-    width: 64px;
-    height: 64px;
 }
 
 #user_avatar_block .avatar_upload {
@@ -2509,7 +2513,7 @@ input[type="range"]::-webkit-slider-thumb {
     cursor: pointer;
     transition: 0.3s ease-in-out;
     filter: drop-shadow(0px 0px 2px black);
-    opacity: 0.2;
+    opacity: 0.3;
 }
 
 .mes_buttons .mes_edit:hover,
@@ -2632,7 +2636,7 @@ input[type="range"]::-webkit-slider-thumb {
     max-height: calc(100vh - 84px);
     max-height: calc(100svh - 84px);
     position: absolute;
-    z-index: 3002;
+    z-index: 3000;
     margin-left: auto;
     margin-right: auto;
     left: 0;
@@ -3120,7 +3124,6 @@ a {
     box-shadow: none;
     border-radius: 10px;
     overflow: hidden;
-    scrollbar-width: thin;
     flex-flow: column;
     min-width: 100px;
 }
@@ -3446,30 +3449,30 @@ a {
     height: 100%;
 }
 
-.novelai_logit_bias_form {
+.logit_bias_form {
     display: flex;
     flex-direction: row;
     column-gap: 10px;
     align-items: center;
 }
 
-.novelai_logit_bias_text,
-.novelai_logit_bias_value {
+.logit_bias_text,
+.logit_bias_value {
     flex: 1;
 }
 
-.novelai_logit_bias_list {
+.logit_bias_list {
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
-.novelai_logit_bias_list:empty {
+.logit_bias_list:empty {
     width: 100%;
     height: 100%;
 }
 
-.novelai_logit_bias_list:empty::before {
+.logit_bias_list:empty::before {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -3478,7 +3481,7 @@ a {
     width: 100%;
     height: 100%;
     opacity: 0.8;
-    min-height: 2.5rem;
+    min-height: 2.5em;
 }
 
 .openai_logit_bias_preset_form {
@@ -3529,11 +3532,11 @@ a {
     display: none;
 }
 
-.reverse_proxy_warning {
+.reverse_proxy_warning:not(small) {
     color: var(--warning);
     background-color: var(--black70a);
     text-shadow: none !important;
-    margin-top: 12px !important;
+    margin-top: 5px !important;
     border-radius: 5px;
     padding: 3px;
     border: 1px solid var(--SmartThemeBorderColor);
@@ -3584,10 +3587,18 @@ a {
 }
 
 .zoomed_avatar {
+    /* Max height with 2/3 aspect ratio */
+    --maxWidth: calc(90vh * 0.666);
+    /* Left gap between the left corner and chat */
+    --leftGapWidth: calc((100vw - var(--sheldWidth)) / 2);
+    /* Left position of the avatar (half of the gap minus half of the avatar width) */
+    --leftPosition: max(0px, calc((var(--leftGapWidth) - var(--maxWidth)) / 2));
     aspect-ratio: 2 / 3;
     padding: 0;
     border: 0;
     background-color: transparent;
+    max-width: var(--maxWidth);
+    left: var(--leftPosition);
 }
 
 .zoomed_avatar img {
@@ -3655,12 +3666,13 @@ a {
 }
 
 .icon-svg {
-    fill: currentColor;
     /* Takes on the color of the surrounding text */
+    fill: currentColor;
     width: auto;
     height: 14px;
-    vertical-align: middle;
+    aspect-ratio: 1;
     /* To align with adjacent text */
+    place-self: center;
 }
 
 .paginationjs {
